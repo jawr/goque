@@ -216,6 +216,8 @@ func (q *Queue) UpdateObject(id uint64, newValue interface{}) (*Item, error) {
 
 // Length returns the total number of items in the queue.
 func (q *Queue) Length() uint64 {
+	q.RLock()
+	defer RUnlock()
 	return q.tail - q.head
 }
 
