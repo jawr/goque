@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/syndtr/goleveldb/leveldb/opt"
 )
 
 // Queue is a standard FIFO (first in, first out) queue.
@@ -33,8 +34,13 @@ func OpenQueue(dataDir string) (*Queue, error) {
 		isOpen:  false,
 	}
 
+	// create some saner options
+	o := &opt.Options{
+		OpenFilesCacheCapacity: -1,
+	}
+
 	// Open database for the queue.
-	q.db, err = leveldb.OpenFile(dataDir, nil)
+	q.db, err = leveldb.OpenFile(dataDir, o)
 	if err != nil {
 		return q, err
 	}
