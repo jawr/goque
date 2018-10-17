@@ -8,6 +8,7 @@ import (
 
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
+	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
 // Queue is a standard FIFO (first in, first out) queue.
@@ -57,6 +58,13 @@ func OpenQueue(dataDir string) (*Queue, error) {
 	// Set isOpen and return.
 	q.isOpen = true
 	return q, q.init()
+}
+
+func (q *Queue) CompactRange() error {
+	q.Lock()
+	defer q.Unlock()
+
+	return q.db.CompactRange(util.Range{})
 }
 
 // Enqueue adds an item to the queue.
